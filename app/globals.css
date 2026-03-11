@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 33% 98%;
+  --foreground: 223 55% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 223 55% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 223 55% 11%;
+  --primary: 223 68% 24%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 215 43% 95%;
+  --secondary-foreground: 223 55% 18%;
+  --muted: 215 38% 94%;
+  --muted-foreground: 220 20% 38%;
+  --accent: 42 70% 53%;
+  --accent-foreground: 223 55% 11%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 216 24% 88%;
+  --input: 216 24% 88%;
+  --ring: 223 68% 24%;
+  --radius: 1rem;
+  --font-sans: "Segoe UI";
+}
+
+* {
+  @apply border-border;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
+
+a {
+  @apply transition-colors;
+}
+
+.page-shell {
+  @apply relative overflow-hidden;
+}
+
+.page-shell::before {
+  background:
+    radial-gradient(circle at top left, rgba(224, 176, 67, 0.18), transparent 25%),
+    radial-gradient(circle at bottom right, rgba(34, 74, 157, 0.16), transparent 32%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.prose-copy {
+  @apply text-base leading-7 text-slate-700;
+}
+

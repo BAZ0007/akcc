@@ -1,0 +1,250 @@
+import type {
+  Announcement,
+  ContactSubmission,
+  EventItem,
+  HomepageSection,
+  Leader,
+  MediaAsset,
+  NavigationItem,
+  NewHereSubmission,
+  Sermon,
+  SiteSetting,
+} from "@/types/cms";
+
+export const demoSiteSettings: SiteSetting[] = [
+  { key: "church_name", label: "Church Name", value: "Australian Kachin Christian Church", group: "general" },
+  { key: "hero_service_time", label: "Service Time", value: "Sundays at 10:30 AM", group: "homepage" },
+  { key: "hero_location", label: "Location", value: "West Ryde Community Hall, Sydney", group: "homepage" },
+  { key: "hero_cta_label", label: "Primary CTA Label", value: "Plan Your Visit", group: "homepage" },
+  { key: "hero_cta_href", label: "Primary CTA Link", value: "/new-here", group: "homepage" },
+  { key: "hero_secondary_cta_label", label: "Secondary CTA Label", value: "Watch Sermons", group: "homepage" },
+  { key: "hero_secondary_cta_href", label: "Secondary CTA Link", value: "/sermons", group: "homepage" },
+  { key: "footer_tagline", label: "Footer Tagline", value: "A welcoming Kachin church family growing in Christ across Australia.", group: "footer" },
+  { key: "footer_address", label: "Footer Address", value: "West Ryde Community Hall, Sydney, NSW", group: "footer" },
+  { key: "footer_email", label: "Footer Email", value: "hello@akcc.org.au", group: "footer" },
+  { key: "footer_phone", label: "Footer Phone", value: "+61 400 000 000", group: "footer" },
+];
+
+export const demoNavigation: NavigationItem[] = [
+  { id: "nav-home", label: "Home", href: "/", sort_order: 1, is_visible: true, location: "header" },
+  { id: "nav-about", label: "About", href: "/about", sort_order: 2, is_visible: true, location: "header" },
+  { id: "nav-sermons", label: "Sermons", href: "/sermons", sort_order: 3, is_visible: true, location: "header" },
+  { id: "nav-events", label: "Events", href: "/events", sort_order: 4, is_visible: true, location: "header" },
+  { id: "nav-new-here", label: "New Here", href: "/new-here", sort_order: 5, is_visible: true, location: "header" },
+  { id: "nav-contact", label: "Contact", href: "/contact", sort_order: 6, is_visible: true, location: "header" },
+  { id: "foot-about", label: "About", href: "/about", sort_order: 1, is_visible: true, location: "footer" },
+  { id: "foot-sermons", label: "Sermons", href: "/sermons", sort_order: 2, is_visible: true, location: "footer" },
+  { id: "foot-events", label: "Events", href: "/events", sort_order: 3, is_visible: true, location: "footer" },
+  { id: "foot-contact", label: "Contact", href: "/contact", sort_order: 4, is_visible: true, location: "footer" },
+];
+
+export const demoHomepageSections: HomepageSection[] = [
+  {
+    id: "home-hero",
+    section_key: "hero",
+    title: "A church family rooted in faith, worship, and community.",
+    subtitle: "Welcome to AKCC",
+    body: "Join us each Sunday as we gather to worship Jesus, encourage one another, and serve the Kachin community across Australia.",
+    cta_label: "Plan Your Visit",
+    cta_href: "/new-here",
+    secondary_cta_label: "Explore Sermons",
+    secondary_cta_href: "/sermons",
+    image_url: "https://images.unsplash.com/photo-1519491050282-cf00c82424b4?auto=format&fit=crop&w=1200&q=80",
+    sort_order: 1,
+    is_enabled: true,
+  },
+  {
+    id: "home-community",
+    section_key: "community",
+    title: "A welcoming place for every generation.",
+    subtitle: "Life Together",
+    body: "From children and youth to families and elders, AKCC is a home where people grow in faith together and care for one another beyond Sunday gatherings.",
+    cta_label: "Meet Our Church",
+    cta_href: "/about",
+    secondary_cta_label: null,
+    secondary_cta_href: null,
+    image_url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80",
+    sort_order: 2,
+    is_enabled: true,
+  },
+  {
+    id: "home-next-steps",
+    section_key: "next_steps",
+    title: "Take your next step with us.",
+    subtitle: "New to AKCC",
+    body: "Whether you are exploring faith, looking for a church home, or hoping to connect with our leaders, we would love to hear from you.",
+    cta_label: "I’m New Here",
+    cta_href: "/new-here",
+    secondary_cta_label: "Contact Us",
+    secondary_cta_href: "/contact",
+    image_url: null,
+    sort_order: 3,
+    is_enabled: true,
+  },
+];
+
+export const demoSermons: Sermon[] = [
+  {
+    id: "sermon-1",
+    title: "Faithful in Every Season",
+    slug: "faithful-in-every-season",
+    speaker: "Rev. Lahpai Zau",
+    date: "2026-03-01",
+    scripture: "Psalm 46",
+    summary: "A message of steady trust in God during change, uncertainty, and transition.",
+    thumbnail_url: "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+    youtube_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    is_published: true,
+  },
+  {
+    id: "sermon-2",
+    title: "The Beauty of Gospel Community",
+    slug: "beauty-of-gospel-community",
+    speaker: "Pastor Mung Nau",
+    date: "2026-02-22",
+    scripture: "Acts 2:42-47",
+    summary: "How the early church models prayer, generosity, fellowship, and joyful witness for us today.",
+    thumbnail_url: "https://img.youtube.com/vi/ysz5S6PUM-U/hqdefault.jpg",
+    youtube_url: "https://www.youtube.com/watch?v=ysz5S6PUM-U",
+    is_published: true,
+  },
+  {
+    id: "sermon-3",
+    title: "Hope That Holds",
+    slug: "hope-that-holds",
+    speaker: "Rev. Gum Ja",
+    date: "2026-02-15",
+    scripture: "Hebrews 6:13-20",
+    summary: "A call to anchor our hearts in the promises of God when life feels unstable.",
+    thumbnail_url: "https://img.youtube.com/vi/jNQXAC9IVRw/hqdefault.jpg",
+    youtube_url: "https://www.youtube.com/watch?v=jNQXAC9IVRw",
+    is_published: true,
+  },
+];
+
+export const demoEvents: EventItem[] = [
+  {
+    id: "event-1",
+    title: "Youth Worship Night",
+    slug: "youth-worship-night",
+    description: "An evening of worship, testimonies, and prayer for our youth and young adults.",
+    date: "2026-03-20",
+    time: "7:00 PM",
+    location: "Parramatta Community Centre",
+    image_url: "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1200&q=80",
+    rsvp_url: "https://example.com/rsvp/youth-worship-night",
+    is_published: true,
+  },
+  {
+    id: "event-2",
+    title: "Family Fellowship Lunch",
+    slug: "family-fellowship-lunch",
+    description: "A relaxed lunch after service for families, newcomers, and ministry leaders to connect.",
+    date: "2026-03-29",
+    time: "12:30 PM",
+    location: "Church Hall",
+    image_url: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1200&q=80",
+    rsvp_url: null,
+    is_published: true,
+  },
+  {
+    id: "event-3",
+    title: "Prayer and Fasting Morning",
+    slug: "prayer-and-fasting-morning",
+    description: "A focused morning of worship and prayer for the church, our city, and mission partners.",
+    date: "2026-04-04",
+    time: "9:00 AM",
+    location: "AKCC Prayer Room",
+    image_url: null,
+    rsvp_url: null,
+    is_published: true,
+  },
+];
+
+export const demoAnnouncements: Announcement[] = [
+  {
+    id: "announcement-1",
+    title: "Volunteer Sign-ups Open",
+    body: "We are welcoming more volunteers for hospitality, worship support, kids ministry, and Sunday setup teams.",
+    cta_label: "Get Involved",
+    cta_href: "/contact",
+    publish_date: "2026-03-05",
+    expires_at: null,
+    is_published: true,
+  },
+  {
+    id: "announcement-2",
+    title: "Prayer Requests Welcome",
+    body: "If you need prayer, our pastoral team would be honored to stand with you throughout the week.",
+    cta_label: "Share a Request",
+    cta_href: "/new-here",
+    publish_date: "2026-03-08",
+    expires_at: null,
+    is_published: true,
+  },
+];
+
+export const demoLeaders: Leader[] = [
+  {
+    id: "leader-1",
+    name: "Rev. Lahpai Zau",
+    role_title: "Senior Pastor",
+    bio: "Serving AKCC with a heart for gospel preaching, pastoral care, and intergenerational discipleship.",
+    image_url: null,
+    email: "pastor@akcc.org.au",
+    phone: null,
+    sort_order: 1,
+    is_published: true,
+  },
+  {
+    id: "leader-2",
+    name: "Maran Htoi",
+    role_title: "Community Care Coordinator",
+    bio: "Helps newcomers connect into fellowship, prayer, and practical support across the church family.",
+    image_url: null,
+    email: "care@akcc.org.au",
+    phone: null,
+    sort_order: 2,
+    is_published: true,
+  },
+];
+
+export const demoContactSubmissions: ContactSubmission[] = [
+  {
+    id: "contact-1",
+    name: "Ja Seng",
+    email: "jaseng@example.com",
+    phone: "+61 401 555 333",
+    subject: "Sunday visit",
+    message: "My family is planning to visit this month and would love to know where to park.",
+    created_at: "2026-03-09T08:00:00.000Z",
+  },
+];
+
+export const demoNewHereSubmissions: NewHereSubmission[] = [
+  {
+    id: "new-here-1",
+    name: "Nang Htoi",
+    email: "nanghtoi@example.com",
+    phone: "+61 412 333 222",
+    household_size: 4,
+    prayer_request: "Please pray for our family as we settle into Sydney.",
+    interested_in: ["Sunday worship", "Small groups"],
+    created_at: "2026-03-10T01:30:00.000Z",
+  },
+];
+
+export const demoMediaAssets: MediaAsset[] = [
+  {
+    id: "media-1",
+    title: "Homepage Hero",
+    file_path: "homepage/hero-image.jpg",
+    public_url: "https://images.unsplash.com/photo-1519491050282-cf00c82424b4?auto=format&fit=crop&w=1200&q=80",
+    mime_type: "image/jpeg",
+    bucket: "site-media",
+    alt_text: "Church community gathered in worship",
+    uploaded_by: null,
+    created_at: "2026-03-01T00:00:00.000Z",
+  },
+];
+

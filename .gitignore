@@ -1,0 +1,13 @@
+.next
+node_modules
+.vercel
+.env.local
+.env
+coverage
+dist
+
+supabase/.temp
+
+
+.npm-cache
+tsconfig.tsbuildinfo

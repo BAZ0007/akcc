@@ -1,0 +1,44 @@
+import Link from "next/link";
+
+import { Container } from "@/components/layout/container";
+import { MobileNav } from "@/components/layout/mobile-nav";
+import { Button } from "@/components/ui/button";
+import { getNavigation, getSiteSettings } from "@/lib/data/queries";
+import { getSetting } from "@/lib/data/helpers";
+
+export async function SiteHeader() {
+  const [navigation, settings] = await Promise.all([getNavigation("header"), getSiteSettings()]);
+  const churchName = getSetting(settings, "church_name", "AKCC");
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-white/20 bg-white/85 backdrop-blur-xl">
+      <Container className="flex h-20 items-center justify-between gap-4">
+        <Link href="/" className="flex flex-col">
+          <span className="text-xs font-semibold uppercase tracking-[0.24em] text-gold-700">Australian Kachin</span>
+          <span className="text-lg font-semibold text-navy-950">{churchName}</span>
+        </Link>
+        <nav className="hidden items-center gap-1 md:flex">
+          {navigation.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              className="rounded-full px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-950"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        <div className="hidden items-center gap-3 md:flex">
+          <Button variant="outline" asChild>
+            <Link href="/sermons">Latest Message</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/new-here">Plan a Visit</Link>
+          </Button>
+        </div>
+        <MobileNav items={navigation} />
+      </Container>
+    </header>
+  );
+}
+
