@@ -43,11 +43,9 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (request.nextUrl.pathname.startsWith("/admin") && !user) {
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = "/login";
-    loginUrl.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
+  const isAdminSubroute = request.nextUrl.pathname.startsWith("/admin/");
+  if (isAdminSubroute && !user) {
+    return NextResponse.redirect(new URL("/admin", request.url));
   }
 
   return response;
@@ -56,4 +54,3 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
-

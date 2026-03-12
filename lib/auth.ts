@@ -35,22 +35,46 @@ export async function getCurrentUserRole(userId: string) {
   return data?.role ?? null;
 }
 
-export async function requireAdmin() {
+export async function getAdminAccess() {
   const user = await getCurrentUser();
 
   if (!isSupabaseConfigured) {
-    return { user: null, role: "admin" as const, isPreviewMode: true };
+    return {
+      user: null,
+      role: "admin" as const,
+      isPreviewMode: true,
+      isAuthenticated: true,
+      isAdmin: true,
+    };
   }
 
   if (!user) {
-    redirect("/login?next=/admin");
+    return {
+      user: null,
+      role: null,
+      isPreviewMode: false,
+      isAuthenticated: false,
+      isAdmin: false,
+    };
   }
 
   const role = await getCurrentUserRole(user.id);
-  if (role !== "admin") {
-    redirect("/login?error=not-authorized");
-  }
 
-  return { user, role, isPreviewMode: false };
+  return {
+    user,
+    role,
+    isPreviewMode: false,
+    isAuthenticated: true,
+    isAdmin: role === "admin",
+  };
 }
 
+export async function requireAdmin() {
+  const access = await getAdminAccess();
+
+  if (!access.isAuthenticated || !access.isAdmin) {
+    redirect("/admin");
+  }
+
+  return access;
+}

@@ -1,13 +1,13 @@
 import type { ReactNode } from "react";
 
-import { logoutAction } from "@/lib/actions/auth";
-import { requireAdmin } from "@/lib/auth";
-import { Container } from "@/components/layout/container";
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
+import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
+import { logoutAction } from "@/lib/actions/auth";
+import { getAdminAccess } from "@/lib/auth";
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  const { isPreviewMode } = await requireAdmin();
+  const access = await getAdminAccess();
 
   return (
     <section className="page-shell py-10">
@@ -18,18 +18,23 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <h1 className="text-2xl font-semibold text-slate-950">Website CMS</h1>
           </div>
           <div className="flex items-center gap-3">
-            {isPreviewMode ? <p className="text-sm text-amber-600">Preview mode without Supabase auth</p> : null}
-            <form action={logoutAction}>
-              <Button variant="outline" type="submit">Sign Out</Button>
-            </form>
+            {access.isPreviewMode ? <p className="text-sm text-amber-600">Preview mode without Supabase auth</p> : null}
+            {access.isAuthenticated && access.isAdmin ? (
+              <form action={logoutAction}>
+                <Button variant="outline" type="submit">Sign Out</Button>
+              </form>
+            ) : null}
           </div>
         </div>
-        <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
-          <AdminSidebar />
+        {access.isAuthenticated && access.isAdmin ? (
+          <div className="grid gap-6 lg:grid-cols-[280px,1fr]">
+            <AdminSidebar />
+            <div>{children}</div>
+          </div>
+        ) : (
           <div>{children}</div>
-        </div>
+        )}
       </Container>
     </section>
   );
 }
-

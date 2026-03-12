@@ -5,6 +5,7 @@ import { EntityForm } from "@/components/admin/entity-form";
 import { MediaManager } from "@/components/admin/media-manager";
 import { StatusBanner } from "@/components/admin/status-banner";
 import { adminSectionsBySlug } from "@/lib/admin-config";
+import { requireAdmin } from "@/lib/auth";
 import { getAdminCollection } from "@/lib/data/queries";
 import {
   demoAnnouncements,
@@ -42,6 +43,8 @@ export default async function AdminSectionPage({
   params: Promise<{ section: string }>;
   searchParams?: Promise<{ edit?: string; status?: string; error?: string }>;
 }) {
+  await requireAdmin();
+
   const { section: slug } = await params;
   const resolvedSearch = searchParams ? await searchParams : undefined;
   const section = adminSectionsBySlug[slug];
@@ -75,4 +78,3 @@ export default async function AdminSectionPage({
     </div>
   );
 }
-
