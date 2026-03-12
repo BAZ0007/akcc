@@ -1,19 +1,36 @@
-import { NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { NextResponse, type NextRequest } from "next/server";
 
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { isSupabaseConfigured } from "@/lib/env";
+import { env, isSupabaseConfigured } from "@/lib/env";
 
-export async function GET(request: Request) {
+type CookieToSet = {
+  name: string;
+  value: string;
+  options?: Parameters<NextResponse["cookies"]["set"]>[2];
+};
+
+export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
+  const nextPath = url.searchParams.get("next") ?? "/admin";
+  const response = NextResponse.redirect(new URL(nextPath, request.url));
 
-  if (!isSupabaseConfigured || !code) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+  if (!isSupabaseConfigured || !code || !env.supabaseUrl || !env.supabaseAnonKey) {
+    return response;
   }
 
-  const supabase = await createSupabaseServerClient();
+  const supabase = createServerClient(env.supabaseUrl, env.supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet: CookieToSet[]) {
+        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+      },
+    },
+  });
+
   await supabase.auth.exchangeCodeForSession(code);
 
-  return NextResponse.redirect(new URL("/admin", request.url));
+  return response;
 }
-
