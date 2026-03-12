@@ -16,14 +16,18 @@ export function LoginForm() {
     <form action={action} className="space-y-5 rounded-[1.5rem] border border-white/60 bg-white p-6 shadow-sm">
       <div className="space-y-2">
         <Label htmlFor="login-email">Admin Email</Label>
-        <Input id="login-email" name="email" type="email" placeholder="admin@akcc.org.au" />
+        <Input id="login-email" name="email" type="email" placeholder="admin@akcc.org.au" autoComplete="email" />
         <FieldError errors={state.errors?.email} />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="login-password">Password</Label>
+        <Input id="login-password" name="password" type="password" placeholder="Enter your password" autoComplete="current-password" />
+        <FieldError errors={state.errors?.password} />
       </div>
       {state.message ? (
         <p className={state.success ? "text-sm text-emerald-600" : "text-sm text-red-600"}>{state.message}</p>
       ) : null}
-      <SubmitButton label="Send Magic Link" pendingLabel="Sending..." className="w-full" />
+      <SubmitButton label="Sign In" pendingLabel="Signing in..." className="w-full" />
     </form>
   );
 }
-

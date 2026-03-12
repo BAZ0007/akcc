@@ -19,5 +19,5 @@ export const newHereFormSchema = z.object({
 
 export const loginSchema = z.object({
   email: z.string().email("Enter the admin email you use for Supabase Auth."),
+  password: z.string().min(8, "Enter your admin password."),
 });
-

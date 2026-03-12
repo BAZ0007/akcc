@@ -24,7 +24,7 @@ export default async function AdminDashboardPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.24em] text-gold-700">AKCC Admin</p>
           <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">Admin access lives here.</h2>
           <p className="max-w-2xl text-lg leading-8 text-slate-200">
-            Use this page to sign in and manage the live AKCC website. Once you are authenticated, this same URL becomes the admin dashboard.
+            Sign in here with your admin email and password, then manage the live AKCC website from this same URL.
           </p>
         </div>
         <Card className="border-white/10 bg-white/95 text-slate-900">

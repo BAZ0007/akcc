@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 
-import { env, isSupabaseConfigured } from "@/lib/env";
+import { isSupabaseConfigured } from "@/lib/env";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loginSchema } from "@/lib/validation/forms";
 import type { ActionState } from "@/types/actions";
@@ -10,12 +10,13 @@ import type { ActionState } from "@/types/actions";
 export async function loginAction(_: ActionState, formData: FormData): Promise<ActionState> {
   const parsed = loginSchema.safeParse({
     email: formData.get("email"),
+    password: formData.get("password"),
   });
 
   if (!parsed.success) {
     return {
       success: false,
-      message: "Please correct the highlighted field.",
+      message: "Please correct the highlighted fields.",
       errors: parsed.error.flatten().fieldErrors,
     };
   }
@@ -28,11 +29,9 @@ export async function loginAction(_: ActionState, formData: FormData): Promise<A
   }
 
   const supabase = await createSupabaseServerClient();
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
-    options: {
-      emailRedirectTo: `${env.siteUrl}/auth/callback`,
-    },
+    password: parsed.data.password,
   });
 
   if (error) {
@@ -42,10 +41,7 @@ export async function loginAction(_: ActionState, formData: FormData): Promise<A
     };
   }
 
-  return {
-    success: true,
-    message: "Magic link sent. Check your inbox to continue.",
-  };
+  redirect("/admin");
 }
 
 export async function logoutAction() {
@@ -54,5 +50,5 @@ export async function logoutAction() {
     await supabase.auth.signOut();
   }
 
-  redirect("/login");
+  redirect("/admin");
 }
