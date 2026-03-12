@@ -7,9 +7,12 @@ import {
   demoAnnouncements,
   demoContactSubmissions,
   demoEvents,
+  demoHomepageSections,
+  demoLeaders,
   demoMediaAssets,
   demoNavigation,
   demoNewHereSubmissions,
+  demoPageSections,
   demoSermons,
   demoSiteSettings,
 } from "@/lib/demo-content";
@@ -42,12 +45,15 @@ export default async function AdminDashboardPage() {
     );
   }
 
-  const [settings, navigation, sermons, events, announcements, contactSubmissions, newHereSubmissions, mediaAssets] = await Promise.all([
+  const [settings, navigation, homepageSections, pageSections, sermons, events, announcements, leaders, contactSubmissions, newHereSubmissions, mediaAssets] = await Promise.all([
     getAdminCollection("site_settings", demoSiteSettings, "label", true),
     getAdminCollection("navigation_items", demoNavigation, "sort_order", true),
+    getAdminCollection("homepage_sections", demoHomepageSections, "sort_order", true),
+    getAdminCollection("page_sections", demoPageSections, "sort_order", true),
     getAdminCollection("sermons", demoSermons, "date", false),
     getAdminCollection("events", demoEvents, "date", true),
     getAdminCollection("announcements", demoAnnouncements, "publish_date", false),
+    getAdminCollection("leaders", demoLeaders, "sort_order", true),
     getAdminCollection("contact_submissions", demoContactSubmissions, "created_at", false),
     getAdminCollection("new_here_submissions", demoNewHereSubmissions, "created_at", false),
     getAdminCollection("media_assets", demoMediaAssets, "created_at", false),
@@ -56,9 +62,12 @@ export default async function AdminDashboardPage() {
   const cards = [
     ["Settings", settings.length],
     ["Navigation Items", navigation.length],
+    ["Homepage Blocks", homepageSections.length],
+    ["Page Sections", pageSections.length],
     ["Published Sermons", sermons.length],
     ["Events", events.length],
     ["Announcements", announcements.length],
+    ["Leaders", leaders.length],
     ["Contact Messages", contactSubmissions.length],
     ["New Here Leads", newHereSubmissions.length],
     ["Media Assets", mediaAssets.length],

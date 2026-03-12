@@ -31,6 +31,22 @@ export interface HomepageSection {
   is_enabled: boolean;
 }
 
+export interface PageSection {
+  id: string;
+  page_key: string;
+  section_key: string;
+  title: string;
+  subtitle: string | null;
+  body: string | null;
+  cta_label: string | null;
+  cta_href: string | null;
+  secondary_cta_label: string | null;
+  secondary_cta_href: string | null;
+  image_url: string | null;
+  sort_order: number;
+  is_enabled: boolean;
+}
+
 export interface Sermon {
   id: string;
   title: string;
@@ -125,9 +141,9 @@ export interface PublicSiteData {
   footerNavigation: NavigationItem[];
   siteSettings: SiteSetting[];
   homepageSections: HomepageSection[];
+  pageSections: PageSection[];
   sermons: Sermon[];
   events: EventItem[];
   announcements: Announcement[];
   leaders: Leader[];
 }
-

@@ -4,7 +4,7 @@ export const adminSections: AdminSectionConfig[] = [
   {
     slug: "settings",
     title: "Site Settings",
-    description: "Manage global labels, service details, footer content, and shared settings.",
+    description: "Manage global labels, SEO defaults, service details, header buttons, and footer content.",
     table: "site_settings",
     orderColumn: "label",
     ascending: true,
@@ -37,7 +37,7 @@ export const adminSections: AdminSectionConfig[] = [
   {
     slug: "homepage",
     title: "Homepage Content",
-    description: "Edit hero and supporting homepage sections, calls to action, and imagery.",
+    description: "Edit hero and primary homepage sections, calls to action, and imagery.",
     table: "homepage_sections",
     orderColumn: "sort_order",
     ascending: true,
@@ -48,6 +48,30 @@ export const adminSections: AdminSectionConfig[] = [
       { name: "title", label: "Title", type: "text", required: true },
       { name: "subtitle", label: "Subtitle", type: "text" },
       { name: "body", label: "Body", type: "textarea" },
+      { name: "cta_label", label: "CTA Label", type: "text" },
+      { name: "cta_href", label: "CTA Href", type: "text" },
+      { name: "secondary_cta_label", label: "Secondary CTA Label", type: "text" },
+      { name: "secondary_cta_href", label: "Secondary CTA Href", type: "text" },
+      { name: "image_url", label: "Image URL", type: "url" },
+      { name: "sort_order", label: "Sort Order", type: "number", required: true },
+      { name: "is_enabled", label: "Enabled", type: "checkbox" },
+    ],
+  },
+  {
+    slug: "page-sections",
+    title: "Page Sections",
+    description: "Manage editable headings, copy blocks, metadata rows, and supporting sections across public pages.",
+    table: "page_sections",
+    orderColumn: "sort_order",
+    ascending: true,
+    supportsDelete: true,
+    listColumns: ["page_key", "section_key", "title", "sort_order", "is_enabled"],
+    fields: [
+      { name: "page_key", label: "Page Key", type: "text", required: true, placeholder: "about" },
+      { name: "section_key", label: "Section Key", type: "text", required: true, placeholder: "hero" },
+      { name: "title", label: "Title", type: "text", required: true },
+      { name: "subtitle", label: "Subtitle", type: "text", description: "Use this for eyebrow text or section labels." },
+      { name: "body", label: "Body", type: "textarea", description: "Use blank lines to separate paragraphs." },
       { name: "cta_label", label: "CTA Label", type: "text" },
       { name: "cta_href", label: "CTA Href", type: "text" },
       { name: "secondary_cta_label", label: "Secondary CTA Label", type: "text" },
@@ -117,6 +141,26 @@ export const adminSections: AdminSectionConfig[] = [
     ],
   },
   {
+    slug: "leaders",
+    title: "Leaders",
+    description: "Manage leadership names, roles, bios, images, and publishing order.",
+    table: "leaders",
+    orderColumn: "sort_order",
+    ascending: true,
+    supportsDelete: true,
+    listColumns: ["name", "role_title", "sort_order", "is_published"],
+    fields: [
+      { name: "name", label: "Name", type: "text", required: true },
+      { name: "role_title", label: "Role Title", type: "text", required: true },
+      { name: "bio", label: "Bio", type: "textarea" },
+      { name: "image_url", label: "Image URL", type: "url" },
+      { name: "email", label: "Email", type: "email" },
+      { name: "phone", label: "Phone", type: "text" },
+      { name: "sort_order", label: "Sort Order", type: "number", required: true },
+      { name: "is_published", label: "Published", type: "checkbox" },
+    ],
+  },
+  {
     slug: "contact-submissions",
     title: "Contact Submissions",
     description: "Review visitor messages and follow up with pastoral care or admin responses.",
@@ -149,4 +193,3 @@ export const adminSections: AdminSectionConfig[] = [
 ];
 
 export const adminSectionsBySlug = Object.fromEntries(adminSections.map((section) => [section.slug, section]));
-

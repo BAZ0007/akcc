@@ -6,15 +6,26 @@ import "@/app/globals.css";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Toaster } from "@/components/ui/toaster";
+import { getSetting } from "@/lib/data/helpers";
+import { getSiteSettings } from "@/lib/data/queries";
 
-export const metadata: Metadata = {
-  title: {
-    default: "AKCC | Australian Kachin Christian Church",
-    template: "%s | AKCC",
-  },
-  description:
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const defaultTitle = getSetting(settings, "meta_default_title", "AKCC | Australian Kachin Christian Church");
+  const defaultDescription = getSetting(
+    settings,
+    "meta_default_description",
     "Australian Kachin Christian Church welcomes people of all ages to worship, grow in faith, and find community.",
-};
+  );
+
+  return {
+    title: {
+      default: defaultTitle,
+      template: "%s | AKCC",
+    },
+    description: defaultDescription,
+  };
+}
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -30,4 +41,3 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
     </html>
   );
 }
-

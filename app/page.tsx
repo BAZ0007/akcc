@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { RichText } from "@/components/content/rich-text";
 import { Container } from "@/components/layout/container";
 import { AnnouncementList } from "@/components/sections/announcement-list";
 import { EventCard } from "@/components/sections/event-card";
@@ -11,12 +12,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getHomePageData } from "@/lib/data/queries";
 import { getSetting } from "@/lib/data/helpers";
+import { getSectionMap } from "@/lib/page-content";
 
 export default async function HomePage() {
-  const { settings, homepageSections, sermons, events, announcements, leaders } = await getHomePageData();
+  const { settings, homepageSections, pageSections, sermons, events, announcements, leaders } = await getHomePageData();
   const hero = homepageSections.find((section) => section.section_key === "hero") ?? homepageSections[0];
   const communitySection = homepageSections.find((section) => section.section_key === "community");
   const nextStepsSection = homepageSections.find((section) => section.section_key === "next_steps");
+  const sectionMap = getSectionMap(pageSections);
+  const welcomeExpect = sectionMap.welcome_card_expect;
+  const welcomeBelong = sectionMap.welcome_card_belong;
+  const sermonsIntro = sectionMap.sermons_intro;
+  const eventsIntro = sectionMap.events_intro;
+  const leadersIntro = sectionMap.leaders_intro;
 
   return (
     <div>
@@ -43,13 +51,13 @@ export default async function HomePage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <Card className="border-white/15 bg-white/10 text-white backdrop-blur">
                 <CardContent className="p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold-300">Service Time</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold-300">{getSetting(settings, "hero_service_time_label", "Service Time")}</p>
                   <p className="mt-3 text-2xl font-semibold">{getSetting(settings, "hero_service_time")}</p>
                 </CardContent>
               </Card>
               <Card className="border-white/15 bg-white/10 text-white backdrop-blur">
                 <CardContent className="p-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold-300">Location</p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-gold-300">{getSetting(settings, "hero_location_label", "Location")}</p>
                   <p className="mt-3 text-2xl font-semibold">{getSetting(settings, "hero_location")}</p>
                 </CardContent>
               </Card>
@@ -77,20 +85,28 @@ export default async function HomePage() {
             </div>
             <Card className="overflow-hidden border-slate-200 bg-white">
               <CardContent className="grid gap-6 p-8 text-sm leading-7 text-slate-600">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-700">What to expect</p>
-                  <p className="mt-3">Warm worship, biblical teaching, prayer, and a welcoming church family that makes space for people of every age and stage.</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-700">Who it’s for</p>
-                  <p className="mt-3">Families, students, working professionals, elders, newcomers, and anyone exploring Christian faith.</p>
-                </div>
+                {welcomeExpect ? (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-700">{welcomeExpect.title}</p>
+                    <RichText value={welcomeExpect.body} className="mt-3" paragraphClassName="text-sm leading-7 text-slate-600" />
+                  </div>
+                ) : null}
+                {welcomeBelong ? (
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-gold-700">{welcomeBelong.title}</p>
+                    <RichText value={welcomeBelong.body} className="mt-3" paragraphClassName="text-sm leading-7 text-slate-600" />
+                  </div>
+                ) : null}
               </CardContent>
             </Card>
           </div>
 
           <div className="space-y-8">
-            <SectionHeading eyebrow="Latest Sermons" title="Recent teaching to encourage your faith." description="Watch recent messages, revisit Sunday teaching, and share sermons with family and friends." />
+            <SectionHeading
+              eyebrow={sermonsIntro?.subtitle ?? "Latest Sermons"}
+              title={sermonsIntro?.title ?? "Recent teaching to encourage your faith."}
+              description={sermonsIntro?.body ?? "Watch recent messages, revisit Sunday teaching, and share sermons with family and friends."}
+            />
             <div className="grid gap-6 lg:grid-cols-3">
               {sermons.slice(0, 3).map((sermon) => (
                 <SermonCard key={sermon.id} sermon={sermon} />
@@ -99,7 +115,11 @@ export default async function HomePage() {
           </div>
 
           <div className="space-y-8">
-            <SectionHeading eyebrow="Upcoming Events" title="Gather, grow, and serve together." description="Church life extends beyond Sunday. Stay connected through prayer gatherings, fellowship, and ministry events." />
+            <SectionHeading
+              eyebrow={eventsIntro?.subtitle ?? "Upcoming Events"}
+              title={eventsIntro?.title ?? "Gather, grow, and serve together."}
+              description={eventsIntro?.body ?? "Church life extends beyond Sunday. Stay connected through prayer gatherings, fellowship, and ministry events."}
+            />
             <div className="grid gap-6 lg:grid-cols-3">
               {events.slice(0, 3).map((eventItem) => (
                 <EventCard key={eventItem.id} eventItem={eventItem} />
@@ -112,7 +132,7 @@ export default async function HomePage() {
               <SectionHeading eyebrow={nextStepsSection?.subtitle ?? "New Here"} title={nextStepsSection?.title ?? "Take your next step"} description={nextStepsSection?.body} />
               <div className="flex flex-wrap gap-4">
                 <Button asChild>
-                  <Link href={nextStepsSection?.cta_href ?? "/new-here"}>{nextStepsSection?.cta_label ?? "I’m New Here"}</Link>
+                  <Link href={nextStepsSection?.cta_href ?? "/new-here"}>{nextStepsSection?.cta_label ?? "I'm New Here"}</Link>
                 </Button>
                 {nextStepsSection?.secondary_cta_label && nextStepsSection.secondary_cta_href ? (
                   <Button asChild variant="outline">
@@ -125,7 +145,11 @@ export default async function HomePage() {
           </div>
 
           <div className="space-y-8">
-            <SectionHeading eyebrow="Leadership" title="Meet the people who help shepherd AKCC." description="Our leaders are committed to pastoral care, prayer, discipleship, and building a church family centered on Christ." />
+            <SectionHeading
+              eyebrow={leadersIntro?.subtitle ?? "Leadership"}
+              title={leadersIntro?.title ?? "Meet the people who help shepherd AKCC."}
+              description={leadersIntro?.body ?? "Our leaders are committed to pastoral care, prayer, discipleship, and building a church family centered on Christ."}
+            />
             <LeaderGrid leaders={leaders} />
           </div>
         </Container>
@@ -133,4 +157,3 @@ export default async function HomePage() {
     </div>
   );
 }
-

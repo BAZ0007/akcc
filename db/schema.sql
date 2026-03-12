@@ -79,6 +79,25 @@ create table if not exists public.homepage_sections (
   updated_at timestamptz not null default timezone('utc'::text, now())
 );
 
+create table if not exists public.page_sections (
+  id uuid primary key default gen_random_uuid(),
+  page_key text not null,
+  section_key text not null,
+  title text not null,
+  subtitle text,
+  body text,
+  cta_label text,
+  cta_href text,
+  secondary_cta_label text,
+  secondary_cta_href text,
+  image_url text,
+  sort_order integer not null default 0,
+  is_enabled boolean not null default true,
+  created_at timestamptz not null default timezone('utc'::text, now()),
+  updated_at timestamptz not null default timezone('utc'::text, now()),
+  unique (page_key, section_key)
+);
+
 create table if not exists public.sermons (
   id uuid primary key default gen_random_uuid(),
   title text not null,
@@ -174,6 +193,7 @@ create index if not exists events_published_date_idx on public.events (is_publis
 create index if not exists announcements_published_date_idx on public.announcements (is_published, publish_date desc);
 create index if not exists navigation_location_sort_idx on public.navigation_items (location, sort_order);
 create index if not exists homepage_sort_idx on public.homepage_sections (sort_order);
+create index if not exists page_sections_page_sort_idx on public.page_sections (page_key, sort_order);
 
 create trigger set_profiles_updated_at
 before update on public.profiles
@@ -192,6 +212,11 @@ execute procedure public.set_updated_at();
 
 create trigger set_homepage_sections_updated_at
 before update on public.homepage_sections
+for each row
+execute procedure public.set_updated_at();
+
+create trigger set_page_sections_updated_at
+before update on public.page_sections
 for each row
 execute procedure public.set_updated_at();
 
@@ -244,6 +269,7 @@ alter table public.roles enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.navigation_items enable row level security;
 alter table public.homepage_sections enable row level security;
+alter table public.page_sections enable row level security;
 alter table public.sermons enable row level security;
 alter table public.events enable row level security;
 alter table public.announcements enable row level security;
@@ -303,6 +329,17 @@ using (is_enabled = true);
 
 create policy "Admins manage homepage sections"
 on public.homepage_sections
+for all
+using (public.is_admin(auth.uid()))
+with check (public.is_admin(auth.uid()));
+
+create policy "Public can read enabled page sections"
+on public.page_sections
+for select
+using (is_enabled = true);
+
+create policy "Admins manage page sections"
+on public.page_sections
 for all
 using (public.is_admin(auth.uid()))
 with check (public.is_admin(auth.uid()));
@@ -408,4 +445,6 @@ create policy "Admins can delete media objects"
 on storage.objects
 for delete
 using (bucket_id in ('site-media', 'documents') and public.is_admin(auth.uid()));
+
+
 

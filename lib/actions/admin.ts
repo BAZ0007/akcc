@@ -25,6 +25,21 @@ function coerceFieldValue(type: string, rawValue: FormDataEntryValue | null) {
   return String(rawValue);
 }
 
+function revalidateCmsRoutes(sectionSlug: string) {
+  const routes = [
+    "/",
+    "/about",
+    "/sermons",
+    "/events",
+    "/contact",
+    "/new-here",
+    "/admin",
+    `/admin/${sectionSlug}`,
+  ];
+
+  routes.forEach((route) => revalidatePath(route));
+}
+
 export async function saveCmsRecordAction(formData: FormData) {
   const sectionSlug = String(formData.get("section") ?? "");
   const id = String(formData.get("id") ?? "").trim();
@@ -56,8 +71,7 @@ export async function saveCmsRecordAction(formData: FormData) {
     await queueSermonEnrichment(payload);
   }
 
-  revalidatePath("/");
-  revalidatePath(`/admin/${section.slug}`);
+  revalidateCmsRoutes(section.slug);
   redirect(`/admin/${section.slug}?status=saved`);
 }
 
@@ -83,8 +97,6 @@ export async function deleteCmsRecordAction(formData: FormData) {
     redirect(`/admin/${section.slug}?error=${encodeURIComponent(error.message)}`);
   }
 
-  revalidatePath("/");
-  revalidatePath(`/admin/${section.slug}`);
+  revalidateCmsRoutes(section.slug);
   redirect(`/admin/${section.slug}?status=deleted`);
 }
-

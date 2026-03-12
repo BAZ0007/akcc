@@ -6,6 +6,7 @@ import {
   demoHomepageSections,
   demoLeaders,
   demoNavigation,
+  demoPageSections,
   demoSermons,
   demoSiteSettings,
 } from "@/lib/demo-content";
@@ -17,6 +18,7 @@ import type {
   HomepageSection,
   Leader,
   NavigationItem,
+  PageSection,
   Sermon,
   SiteSetting,
 } from "@/types/cms";
@@ -47,8 +49,12 @@ export async function getSiteSettings(): Promise<SiteSetting[]> {
 }
 
 export async function getNavigation(location?: "header" | "footer"): Promise<NavigationItem[]> {
+  const fallback = demoNavigation
+    .filter((item) => (location ? item.location === location : true))
+    .sort((a, b) => a.sort_order - b.sort_order);
+
   if (!isSupabaseConfigured) {
-    return demoNavigation.filter((item) => (location ? item.location === location : true)).sort((a, b) => a.sort_order - b.sort_order);
+    return fallback;
   }
 
   const supabase = await createSupabaseServerClient();
@@ -61,7 +67,7 @@ export async function getNavigation(location?: "header" | "footer"): Promise<Nav
   const { data, error } = await query;
   if (error) {
     console.error("Failed to query navigation_items", error);
-    return demoNavigation.filter((item) => (location ? item.location === location : true)).sort((a, b) => a.sort_order - b.sort_order);
+    return fallback;
   }
 
   return ((data ?? []) as NavigationItem[]).filter((item) => item.is_visible);
@@ -69,11 +75,41 @@ export async function getNavigation(location?: "header" | "footer"): Promise<Nav
 
 export async function getHomepageSections(): Promise<HomepageSection[]> {
   if (!isSupabaseConfigured) {
-    return demoHomepageSections.sort((a, b) => a.sort_order - b.sort_order);
+    return demoHomepageSections.filter((section) => section.is_enabled).sort((a, b) => a.sort_order - b.sort_order);
   }
 
   const sections = await selectRows<HomepageSection>("homepage_sections", "sort_order");
-  return (sections.length ? sections : demoHomepageSections).filter((section) => section.is_enabled);
+  return (sections.length ? sections : demoHomepageSections)
+    .filter((section) => section.is_enabled)
+    .sort((a, b) => a.sort_order - b.sort_order);
+}
+
+export async function getPageSections(pageKey?: string): Promise<PageSection[]> {
+  const fallback = demoPageSections
+    .filter((section) => section.is_enabled)
+    .filter((section) => (pageKey ? section.page_key === pageKey : true))
+    .sort((a, b) => a.sort_order - b.sort_order);
+
+  if (!isSupabaseConfigured) {
+    return fallback;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  let query = supabase.from("page_sections").select("*").eq("is_enabled", true).order("sort_order", { ascending: true });
+
+  if (pageKey) {
+    query = query.eq("page_key", pageKey);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Failed to query page_sections", error);
+    return fallback;
+  }
+
+  const sections = (data ?? []) as PageSection[];
+  return (sections.length ? sections : fallback).sort((a, b) => a.sort_order - b.sort_order);
 }
 
 export async function getPublishedSermons(): Promise<Sermon[]> {
@@ -157,11 +193,12 @@ export async function getPublishedLeaders(): Promise<Leader[]> {
 }
 
 export async function getHomePageData() {
-  const [settings, navigation, footerNavigation, homepageSections, sermons, events, announcements, leaders] = await Promise.all([
+  const [settings, navigation, footerNavigation, homepageSections, pageSections, sermons, events, announcements, leaders] = await Promise.all([
     getSiteSettings(),
     getNavigation("header"),
     getNavigation("footer"),
     getHomepageSections(),
+    getPageSections("home"),
     getPublishedSermons(),
     getPublishedEvents(),
     getPublishedAnnouncements(),
@@ -173,6 +210,7 @@ export async function getHomePageData() {
     navigation,
     footerNavigation,
     homepageSections,
+    pageSections,
     sermons,
     events,
     announcements,
@@ -195,4 +233,3 @@ export async function getAdminCollection<T>(table: string, fallback: T[], orderC
 
   return (data ?? []) as T[];
 }
-

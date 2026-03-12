@@ -1,4 +1,4 @@
-export type Json =
+﻿export type Json =
   | string
   | number
   | boolean
@@ -323,6 +323,60 @@ export type Database = {
         }
         Relationships: []
       }
+      page_sections: {
+        Row: {
+          body: string | null
+          created_at: string
+          cta_href: string | null
+          cta_label: string | null
+          id: string
+          image_url: string | null
+          is_enabled: boolean
+          page_key: string
+          secondary_cta_href: string | null
+          secondary_cta_label: string | null
+          section_key: string
+          sort_order: number
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          id?: string
+          image_url?: string | null
+          is_enabled?: boolean
+          page_key: string
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          section_key: string
+          sort_order?: number
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          cta_href?: string | null
+          cta_label?: string | null
+          id?: string
+          image_url?: string | null
+          is_enabled?: boolean
+          page_key?: string
+          secondary_cta_href?: string | null
+          secondary_cta_label?: string | null
+          section_key?: string
+          sort_order?: number
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -581,3 +635,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+
